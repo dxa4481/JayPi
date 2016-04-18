@@ -62,3 +62,34 @@ def tap_state(tap_state, tck, tms):
             print(tap)
         RPIO.output(tck, True)
 
+def pulse_tms(tck, tms, s_tms):
+    if(tck == IGNOREPIN):
+        return
+    RPIO.output(tck, 0)
+    RPIO.output(tms, s_tms)
+    RPIO.output(tck, 1)
+
+def pulse_tdi(tck, tdi, s_tdi):
+    if(DELAY):
+        sleep(0.000005)
+    if(tck != IGNOREPIN):
+        RPIO.output(tck, 0)
+        RPIO.output(tdi, s_tdi)
+        RPIO.output(tck, 1)
+    else:
+        RPIO.output(tdi, s_tdi)
+
+def pulse_tdo(tck, tdo):
+    if(DELAY):
+        sleep(0.000005)
+    RPIO.output(tck, 0)
+    tdo_read = RPIO.input(tdo)
+    RPIO.output(tck, 1)
+    return tdo_read
+
+def init_pins(tck=IGNOREPIN, tms=IGNOREPIN, tdi=IGNOREPIN, ntrst=IGNOREPIN):
+    for i in range(pinslen):
+        RPIO.setup(pins[i], RPIO.IN)
+        #Figure out pullup on RPI
+        #if(PULLUP):
+        #    RPIO
